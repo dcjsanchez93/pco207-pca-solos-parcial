@@ -22,9 +22,22 @@ jobs:
         with:
           use-public-rspm: true
 
-      - name: Instalar pacotes
+      - name: Instalar bibliotecas do sistema
         run: |
-          Rscript -e 'install.packages(c("FactoMineR", "factoextra", "ggplot2"), repos = "https://cloud.r-project.org")'
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            libuv1-dev libpng-dev libfreetype6-dev \
+            libfontconfig1-dev libharfbuzz-dev libfribidi-dev \
+            libcurl4-openssl-dev libssl-dev libxml2-dev
+
+      - name: Instalar pacotes R
+        uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          packages: |
+            any::FactoMineR
+            any::factoextra
+            any::ggplot2
+          cache-version: 1
 
       - name: Executar analise
         run: Rscript scripts/analise_pca.R
